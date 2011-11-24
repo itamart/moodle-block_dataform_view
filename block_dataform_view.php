@@ -129,7 +129,9 @@ class block_dataform_view extends block_base {
         if ($df = new dataform($dataformid, null, true)) {
             if ($view = $df->get_view_from_id($viewid)) {
                 $view->set_page();
-                $this->content->text = $view->display(true);
+                $view->set_content();
+                $viewcontent = $view->display(array('tohtml' => true));
+                $this->content->text = $viewcontent;
             }
         }
 
