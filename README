@@ -1,0 +1,40 @@
+Dataform view block
+===================
+
+This Moodle block allows for displaying Dataform content on the course page.
+
+Installation:
+------------
+Default installation instructions for plugins in category Blocks.
+
+Status:
+------
+Stable
+
+
+Requires:
+--------
+Moodle 2.0-2.3
+
+
+Documentation:
+-------------
+Please feel free to contribute documentation in the relevant area of
+the MoodleDocs wiki.
+
+Support:
+--------
+
+
+Bug reports:
+------------
+
+
+Change log:
+-----------
+2.0.0
+
+Notes
+-----
+
+
