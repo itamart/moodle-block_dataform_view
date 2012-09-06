@@ -1,30 +1,24 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file is part of the Dataform_view block for Moodle - http://moodle.org/.
- *
- * @package block-dataform_view
- * @copyright 2011 Itamar Tzadok
+ * @package block
+ * $subpackage dataform_view
+ * @copyright 2012 Itamar Tzadok
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- * The development of this block used the glossary_random block (2007101509)
- * as a template. To the extent that dataform_view code corresponds to 
- * glossary_random code, certain copyrights on the glossary_random block
- * may obtain, including:
- * @copyright 2003 Eloy Lafuente (stronk7) {@link http://stronk7.com}
- *
- * Moodle is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Moodle is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Moodle. If not, see <http://www.gnu.org/licenses/>.
  */
 
 class restore_dataform_view_block_task extends restore_block_task {
@@ -61,14 +55,20 @@ class restore_dataform_view_block_task extends restore_block_task {
             $config = unserialize(base64_decode($configdata));
             // Get dataform mapping and replace it in config
             if (!empty($config->dataform)) {
-                if ($dataformmap = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'dataform', $config->dataform)) {
-                    $config->dataform = $dataformmap->newitemid;
+                if ($map = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'dataform', $config->dataform)) {
+                    $config->dataform = $map->newitemid;
                 }
             }
             // Get view mapping and replace it in config
             if (!empty($config->view)) {
-                if ($viewmap = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'dataform_view', $config->view)) {
-                    $config->view = $viewmap->newitemid;
+                if ($map = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'dataform_view', $config->view)) {
+                    $config->view = $map->newitemid;
+                }
+            }
+            // Get filter mapping and replace it in config
+            if (!empty($config->filter)) {
+                if ($map = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'dataform_filter', $config->filter)) {
+                    $config->filter = $map->newitemid;
                 }
             }
             $configdata = base64_encode(serialize($config));
