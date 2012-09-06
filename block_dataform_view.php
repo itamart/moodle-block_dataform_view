@@ -189,6 +189,7 @@ class block_dataform_view extends block_base {
                         'modjs' => true,
                         'completion' => true,
                         'comments' => true,
+                        'nologin' => true,
                 );        
                 $pageoutput = $df->set_page('external', $params);
 
