@@ -27,6 +27,14 @@
 class block_dataform_view extends block_base {
 
     /**
+     * Set the applicable formats for this block to all
+     * @return array
+     */
+    function applicable_formats() {
+        return array('all' => true);
+    }
+
+    /**
      *
      */
     function init() {
@@ -181,7 +189,7 @@ class block_dataform_view extends block_base {
         if ($df = new dataform($dataformid, null, true)) {
             if ($view = $df->get_view_from_id($viewid)) {
                 if (!empty($filterid)) {
-                    $view->set_filter($filterid);
+                    $view->set_filter(array('filterid' => $filterid));
                 }        
                 $params = array(
                         'js' => true,
