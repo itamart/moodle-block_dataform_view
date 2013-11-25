@@ -68,6 +68,7 @@ class block_dataform_view_edit_form extends block_edit_form {
 
         // container style
         $mform->addElement('text', 'config_style', get_string('style', 'block_dataform_view'), array('size'=>'64'));
+        $mform->setType('config_style', PARAM_TEXT);
         $mform->disabledIf("config_style", "config_embed", 'eq', 0);
 
         // ajax view loading
