@@ -17,7 +17,7 @@
 /**
  * @package block
  * $subpackage dataform_view
- * @copyright 2012 Itamar Tzadok
+ * @copyright  2013 Itamar Tzadok {@link http://substantialmethods.com}
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -189,7 +189,7 @@ class block_dataform_view extends block_base {
         if ($df = new dataform($dataformid, null, true)) {
             if ($view = $df->get_view_from_id($viewid)) {
                 if (!empty($filterid)) {
-                    $view->set_filter(array('filterid' => $filterid));
+                    $view->set_filter(array('id' => $filterid));
                 }        
                 $params = array(
                         'js' => true,
