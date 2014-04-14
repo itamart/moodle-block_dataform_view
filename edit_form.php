@@ -16,9 +16,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package block
- * $subpackage dataform_view
- * @copyright 2012 Itamar Tzadok
+ * @package block_dataform_view
+ * @copyright 2013 Itamar Tzadok
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -31,7 +30,7 @@ class block_dataform_view_edit_form extends block_edit_form {
         //-------------------------------------------------------------------------------
     	$this->add_action_buttons();
 
-        // Fields for editing HTML block title and contents.
+        // Header
         //--------------------------------------------------------------
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
 
@@ -40,18 +39,32 @@ class block_dataform_view_edit_form extends block_edit_form {
         $mform->setDefault('config_title', get_string('pluginname','block_dataform_view'));
         $mform->setType('config_title', PARAM_MULTILANG);
 
-        // dataforms menu
-        $courseids = array($SITE->id, $this->block->course->id);
-        list($insql, $params) = $DB->get_in_or_equal($courseids);
-        if ($dataforms = $DB->get_records_select_menu('dataform', " course $insql ", $params, 'name', 'id,name')) {        
-            foreach($dataforms as $key => $value) {
-                $dataforms[$key] = strip_tags(format_string($value, true));
+        // Get all Dataforms where user has managetemplate capability
+        if ($dataforms = $DB->get_records('dataform')) {
+            foreach ($dataforms as $dataformid => $dataform) {
+                $df = mod_dataform_dataform::instance($dataformid);
+                // Remove if user cannot manage
+                if (!has_capability('mod/dataform:managetemplates', $df->context)) {
+                    unset($dataforms[$dataformid]);
+                    continue;
+                }
+                $dataforms[$dataformid] = $df;
             }
-            $dataforms = array(0 => get_string('choosedots')) + $dataforms;
+        }
+            
+        // Dataforms menu
+        if ($dataforms) {        
+            $dfmenu = array('' => array(0 => get_string('choosedots')));
+            foreach($dataforms as $dfid => $df) {
+                if (!isset($dfmenu[$df->course->shortname])) {
+                    $dfmenu[$df->course->shortname] = array();
+                }
+                $dfmenu[$df->course->shortname][$dfid] = strip_tags(format_string($df->name, true));
+            }
         } else {
-            $dataforms = array(0 => get_string('nodataforms', 'block_dataform_view'));
+            $dfmenu = array('' => array(0 => get_string('nodataforms', 'block_dataform_view')));
         }    
-        $mform->addElement('select', 'config_dataform', get_string('selectdataform', 'block_dataform_view'), $dataforms);
+        $mform->addElement('selectgroups', 'config_dataform', get_string('selectdataform', 'block_dataform_view'), $dfmenu);
 
         // views menu
         $options = array(0 => get_string('choosedots'));
@@ -70,22 +83,6 @@ class block_dataform_view_edit_form extends block_edit_form {
         $mform->addElement('text', 'config_style', get_string('style', 'block_dataform_view'), array('size'=>'64'));
         $mform->setType('config_style', PARAM_TEXT);
         $mform->disabledIf("config_style", "config_embed", 'eq', 0);
-
-        // ajax view loading
-        $options = array(
-            'dffield' => 'config_dataform',
-            'viewfield' => 'config_view',
-            'filterfield' => 'config_filter',
-            'acturl' => "$CFG->wwwroot/mod/dataform/loaddfviews.php"
-        );
-
-        $module = array(
-            'name' => 'M.mod_dataform_load_views',
-            'fullpath' => '/mod/dataform/dataformloadviews.js',
-            'requires' => array('base','io','node')
-        );
-
-        $PAGE->requires->js_init_call('M.mod_dataform_load_views.init', array($options), false, $module);
     }
     
     /**
@@ -112,9 +109,7 @@ class block_dataform_view_edit_form extends block_edit_form {
                 foreach($views as $key => $value) {
                     $configview->addOption(strip_tags(format_string($value, true)), $key);
                 }
-            }
-        
-            if ($viewid) {           
+
                 if ($filters = $DB->get_records_menu('dataform_filters', array('dataid' => $dataformid), 'name', 'id,name')) {
                     $configfilter = &$this->_form->getElement('config_filter');
                     foreach($filters as $key => $value) {

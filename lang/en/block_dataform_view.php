@@ -15,9 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package block
- * $subpackage dataform_view
- * @copyright 2012 Itamar Tzadok
+ * @package block_dataform_view
+ * @copyright 2013 Itamar Tzadok
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -31,4 +30,5 @@ $string['selectfilter'] = 'Select a filter';
 $string['selectview'] = 'Select a view';
 $string['style'] = 'Container css styles';
 $string['title'] = 'Title';
+$string['dataform_view:addinstance'] = 'Add a new Dataform View';
 

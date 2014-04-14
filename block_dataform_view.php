@@ -15,9 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package block
- * $subpackage dataform_view
- * @copyright  2013 Itamar Tzadok {@link http://substantialmethods.com}
+ * @package block_dataform_view
+ * @copyright 2014 Itamar Tzadok {@link http://substantialmethods.com}
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -82,132 +81,63 @@ class block_dataform_view extends block_base {
     function get_content() {
         global $CFG, $DB, $SITE;
 
-        if (empty($this->config->dataform)) {
-            return null;
-        }
-        
-        // For embedded views use cache
-        if (!empty($this->config->embed) and !empty($this->content->text)) {
-            return $this->content;
-        }
+        $dataformid = !empty($this->config->dataform) ? $this->config->dataform : 0;
+        $viewid = !empty($this->config->view) ? $this->config->view : 0;
+        $filterid = !empty($this->config->filter) ? $this->config->filter : 0;
+        $containerstyle = !empty($this->config->style) ? $this->config->style : null;
 
-        $dataformid = $this->config->dataform;
-        $viewid = $this->config->view;
-        $filterid = $this->config->filter;
-        $course = $this->page->course;
-
-        // validate dataform and reconfigure if needed
-        // (we can get here if the dataform has been deleted)
-        require_once("$CFG->dirroot/course/lib.php");
-        $modinfo = get_fast_modinfo($course);
-        if (!empty($modinfo->instances['dataform'][$dataformid])) {
-            $found = true;
-        } else {
-            // check the site
-            if ($course->id != $SITE->id) {
-                $modinfo = get_fast_modinfo($SITE);
-                if (!empty($modinfo->instances['dataform'][$dataformid])) {
-                    $found = true;
-                }
+        // Validate dataform and reconfigure if needed
+        if (!$dataformid or !$DB->record_exists('dataform', array('id' => $dataformid))) {
+            // (we can get here if the dataform has been deleted)
+            if (isset($this->config)) {
+                $this->config->dataform = 0;
+                $this->config->view = 0;
+                $this->config->filter = 0;            
+                $this->instance_config_commit();
             }
-        }
-        
-        if (empty($found)) {
-            $this->config->dataform = 0;
-            $this->config->view = 0;
-            $this->config->filter = 0;
-            $this->instance_config_commit();
 
-            $this->content->text   = '';
-            $this->content->footer = '';
-            return $this->content;
+            return null;
         }
 
         // validate view and reconfigure if needed
-        // (we can get here if the view has been deleted)
-        if (!$DB->record_exists('dataform_views', array('id' => $viewid, 'dataid' => $dataformid))) {
-            // someone deleted the view after configuration
-            $this->config->view = 0;
-            $this->instance_config_commit();
+        if (!$viewid or !$DB->record_exists('dataform_views', array('id' => $viewid, 'dataid' => $dataformid))) {
+            // (we can get here if the view has been deleted)
+            if (isset($this->config)) {
+                $this->config->view = 0;
+                $this->instance_config_commit();
+            }
 
-            $this->content->text   = '';
-            $this->content->footer = '';
-            return $this->content;
+            return null;
         }
 
         // validate filter
-        if (!empty($filterid) and !$DB->record_exists('dataform_filters', array('id' => $filterid, 'dataid' => $dataformid))) {
+        if (!$filterid or !$DB->record_exists('dataform_filters', array('id' => $filterid, 'dataid' => $dataformid))) {
             // someone deleted the view after configuration
-            $this->config->filter = 0;
-            $this->instance_config_commit();
+            if (isset($this->config)) {
+                $this->config->filter = 0;
+                $this->instance_config_commit();
+            }
         }
 
-        // content->text or ->footer has to contain something for the _print_block to be called
-        $this->content = new object;
+        // Return already generated content
+        if ($this->content !== null) {
+            return $this->content;
+        }
+
+        $this->content = new stdClass;
         $this->content->text = '';
+        $this->content->footer = '';
 
-        // if embed create the container
         if (!empty($this->config->embed)) {
-            $dataurl = new moodle_url(
-                '/mod/dataform/embed.php',
-                array('d' => $dataformid, 'view' => $viewid)
-            );
-            if (!empty($filterid)) {
-                $dataurl->param('filter', $filterid);
-            }
-            $styles = $this->parse_css_style($this->config->style);
-            if (!isset($styles['width'])) {
-                $styles['width'] = '100%;';
-            }
-            if (!isset($styles['height'])) {
-                $styles['height'] = '200px;';
-            }
-            if (!isset($styles['border'])) {
-                $styles['border'] = '0;';
-            }
-            $stylestr = implode('',array_map(function($a, $b){return "$a: $b";}, array_keys($styles), $styles));            
-
-            // The iframe attr
-            $params = array('src' => $dataurl, 'style' => $stylestr);
-            
-            // Add scrolling attr
-            if (!empty($styles['overflow']) and $styles['overflow'] == 'hidden;') {
-                $params['scrolling'] = 'no';
-            }
-
-            $this->content->text = html_writer::tag(
-                'iframe',
-                null,
-                $params  
-            );
-            return $this->content;
+            $content = mod_dataform_dataform::get_content_embedded($dataformid, $viewid, $filterid, $containerstyle);
+        } else {
+            $content = mod_dataform_dataform::get_content_inline($dataformid, $viewid, $filterid);
         }
 
-        
-        // Set a dataform object with guest autologin
-        require_once("$CFG->dirroot/mod/dataform/mod_class.php");
-        if ($df = new dataform($dataformid, null, true)) {
-            if ($view = $df->get_view_from_id($viewid)) {
-                if (!empty($filterid)) {
-                    $view->set_filter(array('id' => $filterid));
-                }        
-                $params = array(
-                        'js' => true,
-                        'css' => true,
-                        'modjs' => true,
-                        'completion' => true,
-                        'comments' => true,
-                        'nologin' => true,
-                );        
-                $pageoutput = $df->set_page('external', $params);
-
-                $view->set_content();
-                $viewcontent = $view->display(array('tohtml' => true));
-                $this->content->text = $viewcontent;
-            }
-            return $this->content;
+        if (!empty($content)) {
+            $this->content->text = $content;
         }
-
+        return $this->content;
     }
 
     /**
@@ -218,24 +148,6 @@ class block_dataform_view extends block_base {
             return true;
         }
         return false;
-    }
-
-    /**
-     * @return array
-     */
-    private function parse_css_style($stylestr) {
-        $styles = array();
-        if (!empty($stylestr) and $arr = explode(';', $stylestr)) {
-            foreach ($arr as $rule) {
-                if ($rule = trim($rule) and strpos($rule, ':')) {
-                    list($attribute, $value) = array_map('trim', explode(':', $rule));
-                    if ($value !== '') {
-                        $styles[$attribute] = "$value;";
-                    }
-                }
-            }                
-        }    
-        return $styles;
     }
 
 }

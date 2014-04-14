@@ -1,40 +1,12 @@
 Dataform view block
 ===================
 
-This Moodle block allows for displaying Dataform content on the course page.
+This Moodle block allows for displaying and interacting with Dataform activity content in a block. By default this block is allowed on all pages.
 
-Installation:
+Release:
 ------------
-Default installation instructions for plugins in category Blocks.
-
-Status:
-------
-Stable
-
-
-Requires:
---------
-Moodle 2.0-2.3
-
+2.6.0
 
 Documentation:
--------------
-Please feel free to contribute documentation in the relevant area of
-the MoodleDocs wiki.
-
-Support:
---------
-
-
-Bug reports:
-------------
-
-
-Change log:
------------
-2.0.0
-
-Notes
------
-
-
+--------------
+http://docs.moodle.org/26/en/Dataform_view_block

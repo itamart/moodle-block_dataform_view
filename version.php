@@ -15,17 +15,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package block
- * $subpackage dataform_view
- * @copyright 2013 Itamar Tzadok {@link http://substantialmethods.com}
+ * @package block_dataform_view
+ * @copyright 2013 Itamar Tzadok
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') or die;
 
 $plugin->component = 'block_dataform_view';
-$plugin->release = '2.1.2';
-$plugin->version = 2013112600;
-$plugin->requires = 2010112400;
+$plugin->release = '2.6.0';
+$plugin->version = 2014041200;
+$plugin->requires = 2013111800;
 $plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = array('mod_dataform' => 2012112600);
+$plugin->dependencies = array('mod_dataform' => 2014041200);
