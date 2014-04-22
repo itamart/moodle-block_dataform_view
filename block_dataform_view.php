@@ -29,28 +29,28 @@ class block_dataform_view extends block_base {
      * Set the applicable formats for this block to all
      * @return array
      */
-    function applicable_formats() {
+    public function applicable_formats() {
         return array('all' => true);
     }
 
     /**
      *
      */
-    function init() {
-        $this->title = get_string('pluginname','block_dataform_view');            
+    public function init() {
+        $this->title = get_string('pluginname', 'block_dataform_view');
     }
 
     /**
      *
      */
-    function specialization() {
+    public function specialization() {
         global $CFG;
-        
+
         $this->course = $this->page->course;
 
         // load userdefined title and make sure it's never empty
         if (empty($this->config->title)) {
-            $this->title = get_string('pluginname','block_dataform_view');
+            $this->title = get_string('pluginname', 'block_dataform_view');
         } else {
             $this->title = $this->config->title;
         }
@@ -71,14 +71,14 @@ class block_dataform_view extends block_base {
     /**
      *
      */
-    function instance_allow_multiple() {
+    public function instance_allow_multiple() {
         return true;
     }
 
     /**
      *
      */
-    function get_content() {
+    public function get_content() {
         global $CFG, $DB, $SITE;
 
         $dataformid = !empty($this->config->dataform) ? $this->config->dataform : 0;
@@ -92,7 +92,7 @@ class block_dataform_view extends block_base {
             if (isset($this->config)) {
                 $this->config->dataform = 0;
                 $this->config->view = 0;
-                $this->config->filter = 0;            
+                $this->config->filter = 0;
                 $this->instance_config_commit();
             }
 
@@ -143,7 +143,7 @@ class block_dataform_view extends block_base {
     /**
      *
      */
-    function hide_header() {
+    public function hide_header() {
         if (isset($this->config->title) and empty($this->config->title)) {
             return true;
         }

@@ -25,9 +25,8 @@
 
 // NOTE: no MOODLE_INTERNAL test here, this file may be required by behat before including /config.php.
 
-require_once(__DIR__ . '/../../../../mod/dataform/tests/behat/behat_mod_dataform.php');
-require_once(__DIR__ . '/../../../../mod/dataform/tests/generator/lib.php');
-        
+require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
+
 use Behat\Behat\Context\Step\Given as Given,
     Behat\Gherkin\Node\TableNode as TableNode;
 /**
@@ -38,5 +37,5 @@ use Behat\Behat\Context\Step\Given as Given,
  * @copyright  2014 Itamar Tzadok
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class behat_block_dataform_view extends behat_mod_dataform {
+class behat_block_dataform_view extends behat_base {
 }
