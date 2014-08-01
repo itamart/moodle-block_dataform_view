@@ -29,11 +29,11 @@ class restore_dataform_view_block_task extends restore_block_task {
     }
 
     public function get_fileareas() {
-        return array(); // No associated fileareas
+        return array(); // No associated fileareas.
     }
 
     public function get_configdata_encoded_attributes() {
-        return array(); // No special handling of configdata
+        return array(); // No special handling of configdata.
     }
 
     /**
@@ -46,25 +46,25 @@ class restore_dataform_view_block_task extends restore_block_task {
     public function after_restore() {
         global $DB;
 
-        // Get the blockid
+        // Get the blockid.
         $blockid = $this->get_blockid();
 
-        // Extract block configdata and update it to point to the new dataform
+        // Extract block configdata and update it to point to the new dataform.
         if ($configdata = $DB->get_field('block_instances', 'configdata', array('id' => $blockid))) {
             $config = unserialize(base64_decode($configdata));
-            // Get dataform mapping and replace it in config
+            // Get dataform mapping and replace it in config.
             if (!empty($config->dataform)) {
                 if ($map = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'dataform', $config->dataform)) {
                     $config->dataform = $map->newitemid;
                 }
             }
-            // Get view mapping and replace it in config
+            // Get view mapping and replace it in config.
             if (!empty($config->view)) {
                 if ($map = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'dataform_view', $config->view)) {
                     $config->view = $map->newitemid;
                 }
             }
-            // Get filter mapping and replace it in config
+            // Get filter mapping and replace it in config.
             if (!empty($config->filter)) {
                 if ($map = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'dataform_filter', $config->filter)) {
                     $config->filter = $map->newitemid;

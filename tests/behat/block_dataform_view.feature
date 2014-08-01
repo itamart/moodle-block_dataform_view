@@ -1,4 +1,4 @@
-@block @block_dataform_view
+@block @block_dataform_view @mod_dataform
 Feature: Block dataform view
     In order to populate Dataform activity content in a course
     As a manager
