@@ -23,8 +23,8 @@
 defined('MOODLE_INTERNAL') or die;
 
 $plugin->component = 'block_dataform_view';
-$plugin->release = '2.7.0';
-$plugin->version = 2014080100;
-$plugin->requires = 2014051200;
+$plugin->release = '2.8.0';
+$plugin->version = 2014111000;
+$plugin->requires = 2014111000;
 $plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = array('mod_dataform' => 2014072100);
+$plugin->dependencies = array('mod_dataform' => 2014111000);
