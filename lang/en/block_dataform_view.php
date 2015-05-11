@@ -31,4 +31,4 @@ $string['selectview'] = 'Select a view';
 $string['style'] = 'Container css styles';
 $string['title'] = 'Title';
 $string['dataform_view:addinstance'] = 'Add a new Dataform View';
-
+$string['dataform_view:myaddinstance'] = 'Add a new Dataform view block to Dashboard';

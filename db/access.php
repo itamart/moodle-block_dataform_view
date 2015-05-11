@@ -24,6 +24,16 @@ defined('MOODLE_INTERNAL') or die;
 
 $capabilities = array(
 
+    'block/dataform_view:myaddinstance' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => array(
+            'user' => CAP_ALLOW
+        ),
+
+        'clonepermissionsfrom' => 'moodle/my:manageblocks'
+    ),
+
     'block/dataform_view:addinstance' => array(
         'riskbitmask' => RISK_SPAM | RISK_XSS,
 
