@@ -10,18 +10,15 @@ Feature: Block dataform view
 
         Given I start afresh with dataform "Test Block Dataform View"
 
-        And I log in as "admin"
-        And I follow "Course 1"
-        And I follow "Test Block Dataform View"
+        ## Field
+        And the following dataform "fields" exist:
+            | name          | type          | dataform  |
+            | Field Text    | text          | dataform1 |
 
-        ## Add a text field.
-        Then I go to manage dataform "fields"
-        And I add a dataform field "text" with "Field Text"
-
-        ## Add an aligned view.
-        Then I go to manage dataform "views"
-        And I add a dataform view "aligned" with "View Aligned"
-        And I set "View Aligned" as default view
+        ## View
+        And the following dataform "views" exist:
+            | name          | type      | dataform  | default   |
+            | View Aligned  | aligned   | dataform1 | 1         |
 
         And the following dataform "entries" exist:
             | dataform  | user          | group | timecreated   | timemodified  | Field Text                |
@@ -31,8 +28,9 @@ Feature: Block dataform view
             | dataform1 | student2      |       |               |               | 4 Entry by Student 02     |
             | dataform1 | student3      |       |               |               | 5 Entry by Student 03     |
 
-        Then I follow "Course 1"
-        And I follow "Turn editing on"
+        Then I log in as "teacher1"
+        And I follow "Course 1"
+        And I turn editing mode on
 
         Then I add the "Dataform view" block
         And I open the "Dataform view" blocks action menu
