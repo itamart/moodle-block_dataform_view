@@ -5,7 +5,7 @@ By default this block is allowed on all pages.
 
 Release:
 ------------
-2.8.6
+2.8.12
 
 Documentation:
 --------------

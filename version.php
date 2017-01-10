@@ -16,15 +16,15 @@
 
 /**
  * @package block_dataform_view
- * @copyright 2015 Itamar Tzadok
+ * @copyright 2017 Itamar Tzadok
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') or die;
 
 $plugin->component = 'block_dataform_view';
-$plugin->release = '2.8.6';
-$plugin->version = 2014111006;
+$plugin->release = '2.8.12';
+$plugin->version = 2014111012;
 $plugin->requires = 2014111000;
 $plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = array('mod_dataform' => 2014111006);
+$plugin->dependencies = array('mod_dataform' => 2014111012);
