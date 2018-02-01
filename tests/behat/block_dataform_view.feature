@@ -1,4 +1,4 @@
-@block @block_dataform_view @mod_dataform
+@block @block_dataform_view @set_dataform
 Feature: Block dataform view
     In order to populate Dataform activity content in a course
     As a manager
@@ -29,8 +29,7 @@ Feature: Block dataform view
             | dataform1 | student3      |       |               |               | 5 Entry by Student 03     |
 
         Then I log in as "teacher1"
-        And I follow "Course 1"
-        And I turn editing mode on
+        And I am on "Course 1" course homepage with editing mode on
 
         Then I add the "Dataform view" block
         And I open the "Dataform view" blocks action menu
